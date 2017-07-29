@@ -43,14 +43,14 @@ const User = `
   }
 `;
 
-export default [User, 
-  Business, 
-  EducationInstitution, 
-  JobPost, 
-  UserEducation, 
-  UserAddress, 
-  UserExperience, 
-  UserExternalInvite, 
+export default [User,
+  Business,
+  EducationInstitution,
+  JobPost,
+  UserEducation,
+  UserAddress,
+  UserExperience,
+  UserExternalInvite,
   UserResearchPaper,
   Interests,
   EducationInstitutionList
