@@ -7,6 +7,8 @@ import JobPost from './typedefs/jobPost';
 import Scalars from './typedefs/scalars';
 import Enums from './typedefs/enums';
 
+import mocks from './mocks';
+
 const RootQuery = `
   type Query {
     user: User!
@@ -22,7 +24,7 @@ const SchemaDefinition = `
   }
 `;
 
-const schema = [SchemaDefinition, 
+const schema = [SchemaDefinition,
   RootQuery, 
   ...Enums, 
   ...Scalars, 
@@ -43,6 +45,9 @@ const executableSchema = makeExecutableSchema({
   resolvers,
 });
 
-//mockedSchema = addMockFunctionsToSchema({ executableSchema });
+addMockFunctionsToSchema({ 
+  schema: executableSchema, 
+  mock: {} 
+});
 
 export { executableSchema as Schema };
