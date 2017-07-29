@@ -3,7 +3,7 @@ import { makeExecutableSchema, addMockFunctionsToSchema } from 'graphql-tools';
 
 import User from './typedefs/user';
 import Interests from './typedefs/interests';
-import JobPost from './typedefs/JobPost';
+import JobPost from './typedefs/jobPost';
 import Scalars from './typedefs/scalars';
 import Enums from './typedefs/enums';
 
