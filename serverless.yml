@@ -19,6 +19,7 @@ service: graphql-lambda-api # NOTE: update this with your service name
 
 plugins:
   - serverless-webpack
+  - serverless-dynamodb-local
   - serverless-offline
 
 
@@ -34,11 +35,12 @@ provider:
 #  region: us-east-1
 
 # you can add statements to the Lambda function's IAM Role here
-#  iamRoleStatements:
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:ListBucket"
-#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "dynamodb:*"
+      Resource: 
+        - "arn:aws:dynamodb:::table/${env:PROJECT}-*-${opt:stage, self:provider.stage}"
 #    - Effect: "Allow"
 #      Action:
 #        - "s3:PutObject"
@@ -80,7 +82,7 @@ functions:
       - http:
           path: graphql
           method: get
-      - http: 
+      - http:
           path: graphql
           method: post
 #      - s3: ${env:BUCKET}
@@ -109,12 +111,35 @@ functions:
 #      variable2: value2
 
 # you can add CloudFormation resource templates here
-#resources:
-#  Resources:
-#    NewResource:
-#      Type: AWS::S3::Bucket
-#      Properties:
-#        BucketName: my-new-bucket
+resources:
+  Resources:
+    interestsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: "${env:PROJECT}-interests-${opt:stage, self:provider.stage}"
+    usersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: "${env:PROJECT}-users-${opt:stage, self:provider.stage}"
+
 #  Outputs:
 #     NewOutput:
 #       Description: "Description for the output"
@@ -123,7 +148,11 @@ functions:
 custom:
   webpackIncludeModules:
     packagePath: './package.json'
+  dynamodb:
+    start:
+      port: 8000
   serverless-offline:
     babelOptions:
       presets: ["es2015", "stage-3"]
-    port: 8000
+    port: 3000
+
