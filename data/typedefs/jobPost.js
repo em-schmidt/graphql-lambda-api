@@ -6,7 +6,7 @@ const JobPost = `
     id : ID!
     business: Business
     description: String
-    type: String
+    type: JobType
     startDate: String
     endDate: String
     applyBy: String
