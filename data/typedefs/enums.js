@@ -18,6 +18,13 @@ const Enums = `
     REJECTED
     DELETED
   }
-`
+
+  enum JobType {
+    INTERN,
+    FULLTIME,
+    PARTTIME,
+    CONTRACT
+  }
+`;
 
 export default [Enums];
