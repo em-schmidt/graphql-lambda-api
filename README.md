@@ -11,3 +11,9 @@ Expects to have .env executed automatically to set the environment using somethi
   > brew install autoenv
  
   make sure to follow the instrution in brew for modifying your dotfiles to enable autoenv
+
+Running locally: 
+
+  > sls offline start
+
+  This will start a local version of the functions and local dynamodb.

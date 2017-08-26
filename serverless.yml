@@ -28,6 +28,9 @@ provider:
   profile: elvs
   runtime: nodejs6.10
   stage: prod
+  environment:
+    STAGE: prod
+    PROJECT: graphql-lambda-api
   region: us-east-1
 
 # you can overwrite defaults here

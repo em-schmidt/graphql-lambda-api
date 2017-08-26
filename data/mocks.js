@@ -1,7 +1,7 @@
-import casual from 'casual';
 
 const mocks = {
-  String: () => 'Mocked String',
+  String: () => 'Mocked',
+  Date: () => 'Now',
 };
 
 export default mocks;

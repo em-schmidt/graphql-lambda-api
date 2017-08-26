@@ -53,6 +53,5 @@ export default [User,
   UserExternalInvite,
   UserResearchPaper,
   Interests,
-  EducationInstitutionList
+  EducationInstitutionList,
 ];
-
