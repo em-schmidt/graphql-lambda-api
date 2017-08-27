@@ -27,7 +27,9 @@ const fullSchema = [SchemaDefinition,
 ];
 
 function getCurrentUser(obj, args, context) {
-  const userId = context.event.requestContext.identity.user;
+
+  const userId = context.event.requestContext.identity.user || "1";
+
   return new Promise((resolve, reject) => {
     const params = {
       TableName: context.tables.usersTable,
@@ -46,7 +48,7 @@ function getCurrentUser(obj, args, context) {
 function updateCurrentUser(_, args, context) {
   // TODO: Currently uses docclient.put, which replaces the existing item...
   // doesn't allow field level uptdates, need to allow for single field updates
-  const userId = context.event.requestContext.identity.user;
+  const userId = context.event.requestContext.identity.user || "1";
   return new Promise((resolve, reject) => {
     const itemParam = args;
     itemParam.id = userId;
@@ -61,7 +63,7 @@ function updateCurrentUser(_, args, context) {
   });
 }
 
-function getUserById(context, userId) {
+function getUserById(obj, args, context) {
   return new Promise((resolve, reject) => {
     const params = {
       TableName: context.tables.usersTable,
@@ -81,6 +83,7 @@ function getUserById(context, userId) {
 const rootResolvers = {
   Query: {
     currentUser: (obj, args, context) => getCurrentUser(obj, args, context),
+
     educationInstitutionList: (obj, args, context) => {
       return [{ id: 1, name: 'Big U', city: 'Sometown', state: 'PA', country: 'USA' }];
     },

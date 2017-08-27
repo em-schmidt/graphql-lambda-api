@@ -8,6 +8,9 @@ exports.graphqlHandler = server.graphqlLambda((event, context) => {
   const headers = event.headers;
   const functionName = context.functionName;
 
+  console.log('EVENT: ', event);
+  console.log('CONTEXT: ', context);
+
   return {
     schema: schema,
     context: {
