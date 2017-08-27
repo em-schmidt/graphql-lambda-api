@@ -42,8 +42,8 @@ provider:
     - Effect: "Allow"
       Action:
         - "dynamodb:*"
-      Resource: 
-        - "arn:aws:dynamodb:::table/${env:PROJECT}-*-${opt:stage, self:provider.stage}"
+      Resource:
+        - "arn:aws:dynamodb:*:*:table/${env:PROJECT}-${opt:stage, self:provider.stage}-*"
 #    - Effect: "Allow"
 #      Action:
 #        - "s3:PutObject"
@@ -128,7 +128,7 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-        TableName: "${env:PROJECT}-interests-${opt:stage, self:provider.stage}"
+        TableName: "${env:PROJECT}-${opt:stage, self:provider.stage}-interests"
     usersTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -141,7 +141,7 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-        TableName: "${env:PROJECT}-users-${opt:stage, self:provider.stage}"
+        TableName: "${env:PROJECT}-${opt:stage, self:provider.stage}-users"
 
 #  Outputs:
 #     NewOutput:

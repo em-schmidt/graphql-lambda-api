@@ -7,7 +7,7 @@ const project = process.env.PROJECT;
 const stage = process.env.STAGE;
 
 const tables = {
-  usersTable: `${project}-users-${stage}`,
+  usersTable: `${project}-${stage}-users`,
 };
 
 
