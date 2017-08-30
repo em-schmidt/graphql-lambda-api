@@ -30,7 +30,7 @@ provider:
   stage: prod
   environment:
     STAGE: prod
-    PROJECT: graphql-lambda-api
+    PROJECT: ${env:PROJECT}
   region: us-east-1
 
 # you can overwrite defaults here
@@ -116,6 +116,14 @@ functions:
 # you can add CloudFormation resource templates here
 resources:
   Resources:
+    CognitoUserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: "${env:PROJECT}-${opt:stage, self:provider.stage}-user-pool"
+        AdminCreateUserConfig:
+          AllowAdminCreateUserOnly: true
+        AutoVerifiedAttributes:
+          - email
     interestsTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -154,6 +162,7 @@ custom:
   dynamodb:
     start:
       port: 8000
+      migrate: true
   serverless-offline:
     babelOptions:
       presets: ["es2015", "stage-3"]

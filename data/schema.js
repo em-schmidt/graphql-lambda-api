@@ -2,8 +2,8 @@
 import { makeExecutableSchema, addMockFunctionsToSchema } from 'graphql-tools';
 
 import User from './typedefs/user';
-// import Interests from './typedefs/interests';
-// import JobPost from './typedefs/jobPost';
+import Interests from './typedefs/interests';
+import JobPost from './typedefs/jobPost';
 import Scalars from './typedefs/scalars';
 import Enums from './typedefs/enums';
 
@@ -13,6 +13,7 @@ const SchemaDefinition = `
     interests: [Interests]
     educationInstitutionList: [EducationInstitutionList]
     availableJobs: [JobPost]
+    user(id: String!): User!
   }
 
   type Mutation {
@@ -24,12 +25,12 @@ const fullSchema = [SchemaDefinition,
   ...Enums,
   ...Scalars,
   ...User,
+  Interests,
+  JobPost,
 ];
 
 function getCurrentUser(obj, args, context) {
-
-  const userId = context.event.requestContext.identity.user || "1";
-
+  const userId = context.event.requestContext.identity.user || '1';
   return new Promise((resolve, reject) => {
     const params = {
       TableName: context.tables.usersTable,
@@ -48,7 +49,7 @@ function getCurrentUser(obj, args, context) {
 function updateCurrentUser(_, args, context) {
   // TODO: Currently uses docclient.put, which replaces the existing item...
   // doesn't allow field level uptdates, need to allow for single field updates
-  const userId = context.event.requestContext.identity.user || "1";
+  const userId = context.event.requestContext.identity.user || '1';
   return new Promise((resolve, reject) => {
     const itemParam = args;
     itemParam.id = userId;
@@ -68,7 +69,7 @@ function getUserById(obj, args, context) {
     const params = {
       TableName: context.tables.usersTable,
       Key: {
-        id: userId,
+        id: args.id,
       },
     };
 
@@ -79,20 +80,32 @@ function getUserById(obj, args, context) {
   });
 }
 
+function getEducationInstitutionList(obj, args, context) {
+  return new Promise((resolve, reject) => {
+    return resolve([{ id: 1, name: 'Big U', city: 'Sometown', state: 'PA', country: 'USA' }]);
+  });
+}
+
+function getAvailableJobs(obj, args, context) {
+  return new Promise((resolve, reject) => {
+    return resolve([{ id: 1, name: 'Job Co.', description: 'We have jobby jobs!', city: 'Sometown', state: 'PA', country: 'USA' }]);
+  });
+}
+
+function getInterests(obj, args, context) {
+  return new Promise((resolve, reject) => {
+    return resolve([{ id: 1, name: 'interest', category: 'interestCategory' }]);
+  });
+}
 
 const rootResolvers = {
   Query: {
     currentUser: (obj, args, context) => getCurrentUser(obj, args, context),
-
-    educationInstitutionList: (obj, args, context) => {
-      return [{ id: 1, name: 'Big U', city: 'Sometown', state: 'PA', country: 'USA' }];
-    },
-    availableJobs: (obj, args, context) => {
-      return [{ id: 1, name: 'Job Co.', description: 'We have jobby jobs!', city: 'Sometown', state: 'PA', country: 'USA' }];
-    },
-    interests: (obj, args, conext) => {
-      return [{ id: 1, name: 'interest', category: 'interestCategory' }];
-    },
+    user: (obj, args, context) => getUserById(obj, args, context),
+    educationInstitutionList: (obj, args, context) =>
+      getEducationInstitutionList(obj, args, context),
+    availableJobs: (obj, args, context) => getAvailableJobs(obj, args, context),
+    interests: (obj, args, context) => getInterests(obj, args, context),
   },
   Mutation: {
     updateCurrentUser: (obj, args, context) => updateCurrentUser(obj, args, context),
